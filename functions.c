@@ -1,19 +1,7 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-struct Student {
-    char Name[50] ;
-    int roll;
-    int C_marks[3];
-    int Phy_marks[3];
-    int Math_marks[3];
-}; struct Student stu[10];
-
-// array of stuctures 
-//struct Students stu[10];
-int student_no ;
-int roll;
 
 void menu_disp()
 {
@@ -24,124 +12,86 @@ void menu_disp()
 }
 
 
-void Adding_student()
+
+void Add_Student()
 {
-    //printf("Enter the student serial number : ");
-    //scanf("%d",&students);
+    FILE * fptr = fopen("student.txt","a");
 
-    printf("Enter the student name : ");
-    scanf("%s",&stu[student_no].Name);
+    int roll ;
+    char name[50];
+    int Math , C , Phy;
 
-    printf("Enter the roll number  : ");
-    scanf("%d",&stu[student_no].roll);
+    printf("Enter the Student Name : ");
+    scanf("%s",name);
+
+    printf("Enter the Student Roll Number : ");
+    scanf("%d",&roll);
+
+    printf("Enter the Math marks : ");
+    scanf("%d",&Math);
+
+    printf("Enter the Physics marks : ");
+    scanf("%d",&Phy);
+
+    printf("Enter the C marks : ");
+    scanf("%d",&C);
+
+    fprintf(fptr,"\n%s %d %d %d %d",name,roll,Math,Phy,C);
+
+    fclose(fptr);
 
 }
 
-void get_grade()
-{
-    for(int i =0;i<3;i++)
-    {
-        printf("Enter the marks in C exam %d : ",i+1);
-        scanf("%d",&stu[student_no].C_marks[i]);
-    }
-    system("cls");
-
-    for(int i =0;i<3;i++)
-    {
-        printf("Enter the marks in Physics exam %d : ",i+1);
-        scanf("%d",&stu[student_no].Phy_marks[i]);
-    }
-    system("cls");
-
-    for(int i =0;i<3;i++)
-    {
-        printf("Enter the marks in Mathematics exam %d : ",i+1);
-        scanf("%d",&stu[student_no].Math_marks[i]);
-    }
-    student_no += 1;
-    system("cls");
-}
-
-
-char grading(int x,int y,int z)
-{
-    float avg = x + y +z;
-    float percentage = (avg/300.0)*100.0;
-    char grade;
-
-    if(percentage>90){
-    grade = 'S';}
-    else if(percentage>80){
-        grade='A';
-    }
-    else if(percentage>70)
-    {
-        grade ='B';
-    }
-    else if(percentage>60)
-    {
-        grade ='C';
-    }
-    else if(percentage>50)
-    {
-        grade ='D';
-    }
-    else{
-        grade ='F';
-    }
-
-    return grade;
-
-}
-
-void disp(int i)
+void Disp_marks(char * name, int roll , int math, int phy , int c)
 {
     printf("************************************\n");
 
-                printf("Name : %s\n",stu[i].Name);
-                printf("Roll : %d\n\n",stu[i].roll);
+                printf("Name : %s\n",name);
+                printf("Roll : %d\n\n",roll);
 
-                char  final_C = grading(stu[i].C_marks[0],stu[i].C_marks[1],stu[i].C_marks[2]) ;
-                char  final_Phy = grading(stu[i].Phy_marks[0],stu[i].Phy_marks[1],stu[i].Phy_marks[2]) ;
-                char  final_Math = grading(stu[i].Math_marks[0],stu[i].Math_marks[1],stu[i].Math_marks[2]) ;
+                printf("Math Marks: %d\n",math);
+                printf("Physics Marks: %d\n",phy);
+                printf("C Marks: %d\n",c);
+            
 
-                printf("    C\t\tPhy\t    Math\n");
-
-
-                printf("ISA1 : %d     ISA1 : %d     ISA1 : %d\n",stu[i].C_marks[0],stu[i].Phy_marks[0],stu[i].Math_marks[0]);
-                printf("ISA2 : %d     ISA2 : %d     ISA2 : %d\n",stu[i].C_marks[1],stu[i].Phy_marks[1],stu[i].Math_marks[1]);
-                printf("ESA  : %d     ESA  : %d     ESA  : %d\n\n",stu[i].C_marks[2],stu[i].Phy_marks[2],stu[i].Math_marks[2]);
-                printf("Grade: %c     Grade: %c     Grade: %c\n",final_C,final_Phy,final_Math);
-
-
-                printf("************************************\n");
+    printf("************************************\n");
 }
 
-void display_grade_student_wise()
+void Disp_student()
 {
-    printf("Enter the roll number : ");
-    scanf("%d",&roll);
-        int count =0;
-            for(int i =0 ;i<student_no;i++)
-            {
-                //int count =0;
 
-                if(stu[i].roll == roll)
-                {
-                disp(i);
-                count += 1;
-                }
-            }
-            if(count==0)
-            {
-                printf("Student does not exist \n");
-            }
-}
+    char name[50];
+    int roll;
+    int Math , C , Phy,choice;
 
-void display_all()
-{
-    for(int i = 0; i<student_no;i++ )
+    FILE * fptr = fopen("student.txt","r");
+
+    printf("1.Choose Student\n");
+    printf("2.Display All Student\n");
+    printf("Enter the choice : ");
+
+    scanf("%d",&choice);
+
+    if(choice == 1)
     {
-        disp(i);
+        int roll_no;
+        printf("Enter the roll number : ");
+        scanf("%d",&roll_no);
+
+        while(fscanf(fptr, "%s %d %d %d %d",name,&roll,&Math,&Phy,&C)!=EOF)
+        {  
+            if(roll_no == roll){
+            Disp_marks(name,roll,Math,Phy,C);
+            break;
+            }  
+        }  
+    }
+    else if(choice == 2)
+    {
+        while(fscanf(fptr, "%s %d %d %d %d",name,&roll,&Math,&Phy,&C)!=EOF)
+        {  
+            Disp_marks(name,roll,Math,Phy,C); 
+        }  
+    fclose(fptr);
     }
 }
