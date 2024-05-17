@@ -1,2 +1,2 @@
 final :
-	gcc main.c functions.c -o final
+	gcc main.c function.c -o final
